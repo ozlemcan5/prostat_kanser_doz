@@ -1,0 +1,89 @@
+
+:root {
+    --ana-arka-plan: #f0f2f6;
+    --baslik-rengi: #1e3a8a;      /* Başlıkların rengi (Koyu Mavi) */
+    --alt-baslik-rengi: #334155;  /* Alt başlıkların rengi */
+    --kart-metin-rengi: #0f172a;  /* Kart içindeki sayıların rengi */
+    --genel-yazi-rengi: #475569;  /* Genel açıklama yazılarının rengi */
+    --buton-rengi: #3b82f6;       /* Butonun arka plan rengi */
+    --buton-yazi-rengi: #ffffff;  /* Butonun üzerindeki yazı rengi */
+    --etiket-rengi: #1e293b;        /* "Prostat En (cm)" gibi yazıların rengi */
+}
+
+/* Ana Arka Plan */
+.stApp {
+    background-color: var(--ana-arka-plan);
+}
+
+/* Ana Başlık (H1) */
+h1 {
+    color: var(--baslik-rengi) !important;
+    text-align: center;
+    font-family: 'Helvetica Neue', sans-serif;
+    border-bottom: 3px solid var(--buton-rengi);
+    padding-bottom: 10px;
+}
+
+/* Giriş Alanlarının Etiketleri (Prostat En, Boy vs. yazıları) */
+.stMarkdown p, label {
+    color: var(--etiket-rengi) !important;
+    font-weight: 600 !important;
+}
+
+/* Alt Başlıklar (Prostat, Rektum, Mesane başlıkları) */
+h3 {
+    color: var(--alt-baslik-rengi) !important;
+}
+
+/* Genel Yazılar (P etiketleri vb.) */
+.stMarkdown p {
+    color: var(--genel-yazi-rengi);
+}
+
+/* Tahmin Sonuç Kartları */
+.metric-card {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+    border-top: 5px solid var(--buton-rengi);
+}
+
+/* Kart İçindeki Tahmin Rakamları */
+.metric-card [data-testid="stMetricValue"] {
+    color: var(--kart-metin-rengi) !important;
+}
+
+/* Buton Düzenlemesi */
+.stButton>button {
+    width: 100%;
+    background-color: var(--buton-rengi) !important;
+    color: var(--buton-yazi-rengi) !important;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    transition: 0.3s;
+}
+
+.stButton>button:hover {
+    opacity: 0.8;
+    transform: translateY(-2px);
+}
+
+
+h4 {
+    color: #ffffff;
+    text-align: center;
+    font-family: 'Helvetica Neue', sans-serif;
+    border-bottom: 3px solid var(--buton-rengi);
+    padding-bottom: 10px;
+    font-size: 24px !important;
+}
+
+li {
+    color: #030000;
+    font-family: 'Helvetica Neue', sans-serif;
+    padding-bottom: 10px;
+    
+}
