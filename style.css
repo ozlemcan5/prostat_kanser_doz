@@ -87,3 +87,17 @@ li {
     padding-bottom: 10px;
     
 }
+
+/* Sayı Giriş Kutularının Dış Çerçevesi ve Arka Planı */
+div[data-testid="stNumberInput"] {
+    background-color: white; 
+    border-radius: 8px;
+    padding: 5px;
+    transition: all 0.3s ease;
+}
+
+/* Kutunun içindeki sayı ve giriş alanı */
+div[data-testid="stNumberInput"] input {
+    background-color:#3985b842; /* Kutu içi arka plan */
+    font-weight: bold !important;
+}
