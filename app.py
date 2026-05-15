@@ -14,15 +14,15 @@ if 'last_doz' not in st.session_state:
 
 # --- 2. YAN MENÜ (NAVİGASYON) ---
 # Burası senin "yönlendirme" kısmın
-st.sidebar.markdown("<h4 style=color: white;'>🩺 Menü</h4>", unsafe_allow_html=True)
+st.sidebar.markdown("<h4 style=color: var(--text-color) !important;'>🩺 Menü</h4>", unsafe_allow_html=True)
 st.sidebar.markdown("<br>", unsafe_allow_html=True) # Küçük bir boşluk
 st.sidebar.markdown("""
     <style>
         section[data-testid="stSidebar"] .st-emotion-cache-17l69ie {
-            color: white !important;
+            color: var(--text-color) !important;
         }
         section[data-testid="stSidebar"] p {
-            color: white !important;
+            color: var(--text-color) !important;
         }
     </style>
 """, unsafe_allow_html=True)
