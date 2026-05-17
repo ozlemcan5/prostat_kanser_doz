@@ -143,7 +143,7 @@ if sayfa == "🏠 Ana Sayfa / Hesaplama":
             fig.add_annotation(
                 xref="paper", yref="paper", x=0.02, y=0.98,
                 text=f"<b>Model Performansı:</b><br>R² Skoru: 0.3382<br>MAE: 4.14 cGy",
-                showarrow=False, bgcolor="#8DB1E4", bordercolor="black", borderwidth=1, borderpad=4
+                showarrow=False, bgcolor="#4E973C", bordercolor="black", borderwidth=1, borderpad=4
             )
 
             fig.update_layout(
