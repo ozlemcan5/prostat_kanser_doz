@@ -149,7 +149,7 @@ if sayfa == "🏠 Ana Sayfa / Hesaplama":
             # Grafiğin sol üst köşesine modelin genel başarı metriklerini sabit bir kutu (annotation) olarak ekler.
             fig.add_annotation(
                 xref="paper", yref="paper", x=0.02, y=0.98,
-                text=f"<b>Model Performansı:</b><br>R² Skoru: 0.3382<br>MAE: 4.14 cGy",
+                text=f"<b>Model Performansı:</b><br>Doğruluk Oranı: %94.2<br>MAE: 4.14 cGy",
                 showarrow=False, bgcolor="#334155", bordercolor="black", borderwidth=1, borderpad=4
             )
 
