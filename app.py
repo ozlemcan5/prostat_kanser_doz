@@ -183,7 +183,7 @@ elif sayfa == "📊Sonuçlar":
         avg = (y_gercek + y_tahmin) / 2
         diff = y_gercek - y_tahmin
         fig_ba = go.Figure()
-        fig_ba.add_trace(go.Scatter(x=avg, y=diff, mode='markers', marker=dict(color="#ffffff", size=10)))
+        fig_ba.add_trace(go.Scatter(x=avg, y=diff, mode='markers', marker=dict(color="#0f6de9", size=10)))
         fig_ba.add_hline(y=np.mean(diff), line_dash="dash", line_color="red", line_width=3)
         fig_ba.update_layout(title="Bland-Altman (Klinik Uyum)", template="plotly_white")
         
