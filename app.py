@@ -1,21 +1,25 @@
-import streamlit as st
-import pandas as pd
-import joblib
-import numpy as np
-import os
-import plotly.graph_objects as go
+import streamlit as st       # Web arayüzünü oluşturmak ve tasarlamak için kullanılan ana kütüphane.
+import pandas as pd          # Verileri tablo (DataFrame) formatında düzenlemek ve göstermek için.
+import joblib                # Eğitilmiş makine öğrenmesi modelini (.pkl) sisteme yüklemek için.
+import numpy as np           # Matematiksel işlemler, dizi (array) ve matris operasyonları için. 
+import os                    # Dosya yolları ve klasör kontrolü (klasör var mı yok mu) işlemleri için. 
+import plotly.graph_objects as go  # Etkileşimli grafikler çizmek için kullanılan kütüphane.
 
-# --- 1. AYARLAR VE HAFIZA ---
+
+# Web tarayıcısının sekmesinde görünecek başlığı ve sayfa düzenini ayarlar.
 st.set_page_config(page_title="Radyoterapi Doz Tahmini", layout="wide")
 
-# Doz değerini sayfalar arası taşımak için hafızaya alıyoruz
-if 'last_doz' not in st.session_state:
-    st.session_state.last_doz = 70.0
 
-# --- 2. YAN MENÜ (NAVİGASYON) ---
-# Burası senin "yönlendirme" kısmın
+# Streamlit sayfayı her yenilediğinde değişkenler sıfırlanır.
+# Sayfalar arası geçişte (Ana Sayfa -> Sonuçlar) doz değerinin kaybolmaması için bu değeri oturum hafızasına (session_state) alıyoruz.
+if 'last_doz' not in st.session_state:
+    st.session_state.last_doz = 70.0  # Eğer hafızada henüz doz yoksa varsayılan olarak 70.0 atanır.
+
+
+# YAN MENÜ 
+# Sol taraftaki yan menüye (Sidebar) HTML kullanarak "Menü" başlığı ekler. text color olduğu için koyu mod açık modda renk değişir.
 st.sidebar.markdown("<h4 style=color: var(--text-color) !important;'>🩺 Menü</h4>", unsafe_allow_html=True)
-st.sidebar.markdown("<br>", unsafe_allow_html=True) # Küçük bir boşluk
+st.sidebar.markdown("<br>", unsafe_allow_html=True) # Tasarımın sıkışık durmaması için bir boşluk bırakır.
 st.sidebar.markdown("""
     <style>
         section[data-testid="stSidebar"] .st-emotion-cache-17l69ie {
@@ -26,26 +30,30 @@ st.sidebar.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
+# Kullanıcının tıklayarak sayfalar arasında geçiş yapabileceği radyo buton menüsünü oluşturur.
 sayfa = st.sidebar.radio("Sayfa Seçiniz:", ["🏠 Ana Sayfa / Hesaplama", "📊Sonuçlar", "🖼️ Örnek Görüntüler"])
 
-# --- 3. CSS YÜKLEME ---
+# CSS YÜKLEME
+# "style.css" dosyasını okuyup Streamlit içerisine yükleyen fonksiyon.
 def load_css(file_name):
-    if os.path.exists(file_name):
+    if os.path.exists(file_name): # Belirtilen isimde bir CSS dosyası klasörde var mı kontrol eder.
         with open(file_name) as f:
-            st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+            st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True) # Dosyayı okur ve web sayfasına uygular.
 
+# "style.css" dosyasını sisteme yükler.
 load_css("style.css")
 
-# ==========================================================
-# 🏠 1. SAYFA: HESAPLAMA EKRANI
-# ==========================================================
+
+#  ANA SAYFA / HESAPLAMA EKRANI
 if sayfa == "🏠 Ana Sayfa / Hesaplama":
     
-#    3. BAŞLIK VE AÇIKLAMA: Kullanıcıya sistemin amacını belirtir.
+    # HTML kullanarak ana başlığı ekrana getirir.
     st.markdown("<h1>🩺 Prostat Kanseri Doz Tahmin Sistemi</h1>", unsafe_allow_html=True)
+    # Başlığın altına bir metin yazar.
     st.write("Hastanın anatomik ölçümlerini girerek tahmini doz değerlerini hesaplayabilirsiniz.")
 
-    # 4. GİRİŞ ALANLARI: Ekranı 3 sütuna bölerek sayısal veri giriş kutuları (number_input) oluşturur.
+
+    # Ekranı 3 sütuna bölerek sayısal veri giriş kutuları (number_input) oluşturur.
     col1, col2, col3 = st.columns(3)
 
     with col1:
@@ -69,28 +77,30 @@ if sayfa == "🏠 Ana Sayfa / Hesaplama":
         m_hacim = st.number_input("Mesane Hacim (cm³)", value=119.89)
         m_cap = st.number_input("Mesane Çap (cm)", value=8.78)
 
-    st.divider()
+    st.divider() 
 
 
-    # 5. HESAPLAMA BUTONU VE MODEL ÇALIŞTIRMA
-    if st.button("📊 Hesapla ve Tahmin Et"):
-        if os.path.exists('models/final_model.pkl'):
-            model = joblib.load('models/final_model.pkl')
+    # HESAPLAMA BUTONU VE MODEL ÇALIŞTIRMA
+    if st.button("📊 Hesapla ve Tahmin Et"):  # Kullanıcı butona tıkladığında aşağıdaki kodlar tetiklenir.
+        if os.path.exists('models/final_model.pkl'):  # Model dosyasının klasörde olup olmadığını doğrular.
+            model = joblib.load('models/final_model.pkl')  # Eğitilmiş Yapay Zeka modelini (en yüksek doğrulukla çalışan) hafızaya yükler.
         
-            # Giriş verisini modele gönderiyoruz
+            # 12 adet anatomik giriş verisini modelin anlayacağı iki boyutlu bir NumPy matrisine dönüştürür.
             input_data = np.array([[p_en, p_boy, p_hacim, p_cap, r_en, r_boy, r_hacim, r_cap, m_en, m_boy, m_hacim, m_cap]])
         
+            # Yapay zeka modeline verileri göndererek tahmin sonuçlarını alır ve tek boyutlu bir listeye çevirir. (.flatten)
             res = model.predict(input_data).flatten()
-            # st.write(prediction)
-            doz = float(res[0])
-            m_etki = float(np.mean(res[1:6]))
-            r_etki = float(np.mean(res[6:11]))
+            
+            doz = float(res[0])  # Model çıktısının 0. indeksi "Tahmini Verilmesi Gereken Doz" değeridir.
+            m_etki = float(np.mean(res[1:6]))  # 1 ile 6 arasındaki indekslerin ortalaması mesane etkilenme oranını verir.
+            r_etki = float(np.mean(res[6:11])) # 6 ile 11 arasındaki indekslerin ortalaması: Rektum etkilenme oranını verir.
 
             st.divider()
-            st.subheader("🎯 Tahmin Sonuçları")
+            st.subheader("🎯 Tahmin Sonuçları")  # Sonuç paneli başlığı
 
-        # Üstteki boş kutucukları sildik, doğrudan sonuç kartlarını oluşturuyoruz
+            # Sonuç kartlarını yan yana 3 sütunda göstermek için ekranı böler.
             res_col1, res_col2, res_col3 = st.columns(3)
+        
         
             with res_col1:
                 st.markdown(f"""
@@ -118,84 +128,88 @@ if sayfa == "🏠 Ana Sayfa / Hesaplama":
 
             st.divider()
         
-
-            # 3. Grafik İçin Simülasyon (Doz Değişim Analizi)
-            # 1. Ana Doz Kartı
+            # Tek satırlık bir kart oluşturur.
             st.markdown(f'<div class="metric-card"><h3>Tahmini Verilmesi Gereken Doz: {doz:.2f} Gy</h3></div>', unsafe_allow_html=True)
 
         
-            # 2. Grafik Hazırlığı (40, 50, 60, 70, 75 Gy Basamakları)
-            # 7. GRAFİK HAZIRLIĞI: 40-75 Gy arasındaki değişim trendini çizdirir.
+            # Grafik Oluşturma (40, 50, 60, 70, 75 Gy)
+            # 40-75 Gy arasındaki değişim grafiğini çizdirir.
             doz_basamaklari = [40, 50, 60, 70, 75]
+
             #Model tek seferde bir dizi çıktı verir. Bu parçalama işlemi, hangi değerin mesane hangi değerin rektum grafiğine gideceğini belirler.
             mesane_serisi = res[1:6]  # 1'den 6'ya kadar olan indisler
             rektum_serisi = res[6:11] # 6'dan 11'e kadar olan indisler
 
-            # Grafik Çizimi
+        
             # Plotly kütüphanesi ile etkileşimli çizgi grafiği oluşturur.
             fig = go.Figure()
             fig.add_trace(go.Scatter(x=doz_basamaklari, y=mesane_serisi, mode='lines+markers', name='Mesane Etkilenme (Tahmin)', line=dict(color='#3b82f6', width=4)))
             fig.add_trace(go.Scatter(x=doz_basamaklari, y=rektum_serisi, mode='lines+markers', name='Rektum Etkilenme (Tahmin)', line=dict(color='#ef4444', width=4)))
 
-
-        # 8. HATA METRİKLERİ EKLEME (Grafik üzerine not):
-            # Buradaki değerleri model_train.py çıktınıza göre güncelleyebilirsiniz.
+            # Grafiğin sol üst köşesine modelin genel başarı metriklerini sabit bir kutu (annotation) olarak ekler.
             fig.add_annotation(
                 xref="paper", yref="paper", x=0.02, y=0.98,
                 text=f"<b>Model Performansı:</b><br>R² Skoru: 0.3382<br>MAE: 4.14 cGy",
                 showarrow=False, bgcolor="#334155", bordercolor="black", borderwidth=1, borderpad=4
             )
 
+            # Grafiğin başlıklarını, eksen isimlerini ve arka plan temasını ayarlar.
             fig.update_layout(
                 title="Doz Basamaklarına Göre Organ Etkilenme Tahmini",
                 xaxis_title="Planlanan Doz (Gy)",
                 yaxis_title="Tahmin Edilen Organ Etkilenme Oranı (%)",
                 template="plotly_white",
-                hovermode="x unified"
+                hovermode="x unified"  # X ekseni üzerine geldiğimizde iki organın değerini aynı anda gösterir.
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, use_container_width=True) # Oluşturulan Plotly grafiğini web arayüzünde tam genişlikte ayarlar.
         
 
-# ==========================================================
-# 📊 2. SAYFA: DETAYLI PERFORMANS SONUÇLARI
-# ==========================================================
+# SONUÇLAR EKRANI
 elif sayfa == "📊Sonuçlar":
     st.markdown("<h1>📊 Detaylı Performans Analizi</h1>", unsafe_allow_html=True)
     
-    # Hafızadaki dozu alıyoruz
+    # Hafızadan en son doz değerini çeker.
     doz = st.session_state.last_doz
     
     # Metrik Tablosu
-    # y_true ve y_pred simülasyonu (doz değişkenini yukarıdaki hesaplamadan alıyor)
+    # Modelin istatistiksel hata analizini simüle etmek için gerçek ve tahmin serileri oluşturur.
     y_gercek = np.array([doz, doz * 1.05, doz * 0.95, doz * 1.02, doz * 0.98])
     y_tahmin = np.array([doz * 0.98, doz * 1.02, doz * 1.01, doz * 0.97, doz * 1.03])
-            
-            # 1. Metrik Tablosu
+           
+    # Model değerlendirme metriklerini bir sözlük içinde toplar.
     metrics_data = {
         "Metrik": ["R² Skoru", "MAE (Ort. Mutlak Hata)", "RMSE (Kök Hata)", "MAPE (Yüzdesel Hata)", "Max Error"],
         "Değer": ["0.3382", f"{4.14:.2f} cGy", f"{5.32:.2f} cGy", "%5.8", f"{11.20:.2f} cGy"]
     }
+    # Sözlük verisini bir Pandas DataFrame'e dönüştürür ve arayüzde tablo olarak gösterir.
     st.dataframe(pd.DataFrame(metrics_data), use_container_width=True)
 
-            # 2. Grafiksel Analizler
+
+    # Grafikleri yan yana yerleştirmek için ekranı 2 sütuna böler.
     c_g1, c_g2 = st.columns(2)
+
+    # BLAND-ALTMAN GRAFİĞİ (KLİNİK UYUM ANALİZİ)
     with c_g1:
-        avg = (y_gercek + y_tahmin) / 2
-        diff = y_gercek - y_tahmin
+        avg = (y_gercek + y_tahmin) / 2 # İki değerin ortalaması (X ekseni)
+        diff = y_gercek - y_tahmin      # İki değer arasındaki fark/hata (Y ekseni)
         fig_ba = go.Figure()
+        # Hastaları temsil eden noktaları grafiğe ekler.
         fig_ba.add_trace(go.Scatter(x=avg, y=diff, mode='markers', marker=dict(color="#0f6de9", size=10)))
+        # Grafiğe hataların ortalamasını gösteren kesikli bir çizgi çeker.
         fig_ba.add_hline(y=np.mean(diff), line_dash="dash", line_color="red", line_width=3)
         fig_ba.update_layout(title="Bland-Altman (Klinik Uyum)", template="plotly_white")
         
         st.plotly_chart(fig_ba, use_container_width=True)
 
+    # HATA DAĞILIM HISTOGRAMI
     with c_g2:
+        # Hataların hangi aralıklarda yoğunlaştığını gösteren histogram grafiği çizer.
         fig_res = go.Figure(data=[go.Histogram(x=diff, marker_color='#ef4444')])
         fig_res.update_layout(title="Hata Dağılım Histogramı", template="plotly_white")
         st.plotly_chart(fig_res, use_container_width=True)
 
-            # 3. Bilgi Kutusu
-    # 3. Bilgi Kutusu
+           
+    # Analiz Notları başlıklı bir bilgi kutusu oluşturuyoruz.
     st.markdown(f"""
         <div style="background-color: #f1f5f9; padding: 20px; border-radius: 10px; border: 2px solid #cbd5e1;">
             <h3 style="color: black !important; font-weight: bold; margin-top:0;">📖 Analiz Notları</h3>
@@ -217,30 +231,27 @@ elif sayfa == "📊Sonuçlar":
         </div>
     """, unsafe_allow_html=True)
    
-    # ==========================================================
-    # 🖼️ 3. SAYFA: ÖRNEK GÖRÜNTÜLER
-    # ==========================================================
-# ==========================================================
-# 🖼️ 3. SAYFA: ÖRNEK GÖRÜNTÜLER
-# ==========================================================
+   
+ # 🖼️ 3. SAYFA: ÖRNEK GÖRÜNTÜLER
 else:
     st.markdown("<h1 style='color: white;'>🖼️ Örnek Görüntüler</h1>", unsafe_allow_html=True)
     st.write("Modelimize girdi olarak sağlanan anatomik ölçümlerin nasıl alındığına dair örnek görseller:")
 
-    # Örnek içerik için 3 sütun oluşturuyoruz
+    # Örnek içerik için 3 sütun oluşturuyoruz.
     img_col1, img_col2, img_col3 = st.columns(3)
 
     # 1. SÜTUN: Anatomik Ölçümler
     with img_col1:
         st.markdown("<h3 style='color: white;'>Organların Anatomik Ölçümleri</h3>", unsafe_allow_html=True)
-        # Klasöründeki resmi çağırıyoruz (Örn: data/organ/prostat.jpg - dosya adını kontrol et)
+        # Klasöründeki resmi çağırır.
         organ_yolu = os.path.join("data", "organ", "organ.jpeg") 
-        if os.path.exists(organ_yolu):
-            st.image(organ_yolu, use_container_width=True)
+        if os.path.exists(organ_yolu): # Dosya klasörde var mı kontrol eder.
+            st.image(organ_yolu, use_container_width=True) # Resmi ekranda gösterir ve sütun genişliğine sığdırır.
             st.markdown("<p style='color: black; font-style: italic; font-size: 25px;'>Organların Anatomik Ölçümleri</p>", unsafe_allow_html=True)
         else:
-            st.error("Prostat resmi data/organ klasöründe bulunamadı.")
+            st.error("Prostat resmi data/organ klasöründe bulunamadı.") # Resim yoksa hata mesajı gösterir.
 
+        # Resmin altına bilgilendirme kutusu ekler.
         st.markdown("""
             <div style="background-color: #f8fafc; padding: 10px; border-radius: 5px; border: 1px solid #cbd5e1;">
                 <p style="color: black !important; margin-bottom: 5px;"><b>Bilgiler:</b></p>
@@ -301,7 +312,8 @@ else:
         """, unsafe_allow_html=True)
 
     st.divider()
-    # Bilgi kutusu
+    
+    # Sayfanın en sonuna genel bir açıklama alanı ekler.
     st.markdown("""
         <div style="background-color: #e0f2fe; padding: 10px; border-radius: 5px; border-left: 5px solid #0ea5e9;">
             <p style="color: black !important; margin: 0;">ℹ️ Bu görüntüler, çalışmamızda kullanılan veri setinin ölçüm standartlarını temsil etmektedir.</p>
