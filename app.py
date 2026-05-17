@@ -31,7 +31,7 @@ st.sidebar.markdown("""
     </style>
 """, unsafe_allow_html=True)
 # Kullanıcının tıklayarak sayfalar arasında geçiş yapabileceği radyo buton menüsünü oluşturur.
-sayfa = st.sidebar.radio("Sayfa Seçiniz:", ["🏠 Ana Sayfa / Hesaplama", "📊Sonuçlar", "🖼️ Örnek Görüntüler"])
+sayfa = st.sidebar.radio("Sayfa Seçiniz:", ["🏠 Ana Sayfa / Hesaplama", "📊 Sonuçlar", "🖼️ Örnek Görüntüler"])
 
 # CSS YÜKLEME
 # "style.css" dosyasını okuyup Streamlit içerisine yükleyen fonksiyon.
@@ -165,7 +165,7 @@ if sayfa == "🏠 Ana Sayfa / Hesaplama":
         
 
 # SONUÇLAR EKRANI
-elif sayfa == "📊Sonuçlar":
+elif sayfa == "📊 Sonuçlar":
     st.markdown("<h1>📊 Detaylı Performans Analizi</h1>", unsafe_allow_html=True)
     
     # Hafızadan en son doz değerini çeker.
