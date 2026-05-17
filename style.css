@@ -1,103 +1,105 @@
-
+/* Tüm projede kullanılacak ortak renk paleti burada tanımlanır. 
+   Buradaki bir rengi değiştirmek, o rengin kullanıldığı tüm bileşenleri otomatik günceller. */
 :root {
-    --ana-arka-plan: #f0f2f6;
-    --baslik-rengi: #1e3a8a;      /* Başlıkların rengi (Koyu Mavi) */
-    --alt-baslik-rengi: #334155;  /* Alt başlıkların rengi */
-    --kart-metin-rengi: #0f172a;  /* Kart içindeki sayıların rengi */
-    --genel-yazi-rengi: #475569;  /* Genel açıklama yazılarının rengi */
-    --buton-rengi: #3b82f6;       /* Butonun arka plan rengi */
-    --buton-yazi-rengi: #ffffff;  /* Butonun üzerindeki yazı rengi */
-    --etiket-rengi: #1e293b;        /* "Prostat En (cm)" gibi yazıların rengi */
+    --ana-arka-plan: #f0f2f6;       /* Web sitesinin genel arka plan rengi */
+    --baslik-rengi: #1e3a8a;        /* H1 ana başlıklarının rengi */
+    --alt-baslik-rengi: #334155;    /* H3 alt başlıklarının rengi  */
+    --kart-metin-rengi: #0f172a;    /* Sonuç kartlarının içindeki sayıların/değerlerin rengi */
+    --genel-yazi-rengi: #475569;    /* Paragraf ve genel açıklama metinlerinin rengi */
+    --buton-rengi: #3b82f6;         /* "Hesapla" butonunun ana arka plan rengi  */
+    --buton-yazi-rengi: #ffffff;    /* Butonun üzerindeki metnin rengi  */
+    --etiket-rengi: #1e293b;        /* "Prostat En (cm)" gibi giriş kutusu isimlerinin rengi */
 }
 
-/* Ana Arka Plan */
+/* Web uygulamasının genel arka plan rengini yukarıda tanımladığımız boyar. */
 .stApp {
     background-color: var(--ana-arka-plan);
 }
 
-/* Ana Başlık (H1) */
+/* Ana Başlık "Prostat Kanseri Doz Tahmin Sistemi" yazısı */
 h1 {
-    color: var(--baslik-rengi) !important;
-    text-align: center;
-    font-family: 'Helvetica Neue', sans-serif;
-    border-bottom: 3px solid var(--buton-rengi);
-    padding-bottom: 10px;
+    color: var(--baslik-rengi) !important;         /* Yazı rengi (!important ile zorla bu şekilde yapıyoruz.) */
+    text-align: center;                            /* Başlığı ekranın ortasına hizalar. */
+    font-family: 'Helvetica Neue', sans-serif;     /* Yazı tipi */
+    border-bottom: 3px solid var(--buton-rengi);   /* Başlığın altına bir çizgi çeker. */
+    padding-bottom: 10px;                          /* Çizgi ile yazı arasında 10 piksellik boşluk bırakır. */
 }
 
-/* Giriş Alanlarının Etiketleri (Prostat En, Boy vs. yazıları) */
+/* Giriş Alanlarının Etiketleri "number_input üzerindeki yazılar" */
 .stMarkdown p, label {
-    color: var(--etiket-rengi) !important;
-    font-weight: 600 !important;
+    color: var(--etiket-rengi) !important;   /* Yazı rengi */
+    font-weight: 600 !important;             /* Yazıyı daha kalın hale getirir. */
 }
 
-/* Alt Başlıklar (Prostat, Rektum, Mesane başlıkları) */
+/* Alt Başlıklar */
 h3 {
-    color: var(--alt-baslik-rengi) !important;
+    color: var(--alt-baslik-rengi) !important;   /* Yazı rengi */
 }
 
-/* Genel Yazılar (P etiketleri vb.) */
+/* Genel Açıklama Yazıları */
 .stMarkdown p {
-    color: var(--genel-yazi-rengi);
+    color: var(--genel-yazi-rengi);   /* Yazı rengi */
 }
 
 /* Tahmin Sonuç Kartları */
 .metric-card {
-    background-color: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    text-align: center;
-    border-top: 5px solid var(--buton-rengi);
+    background-color: white;                 /* Kart içinin rengi */
+    padding: 15px;                             /* Kart ile yazılar arasında boşluk bırakır. */
+    border-radius: 10px;                       /* Kartın köşelerini yumuşatır. */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);   /* Kartın altına gölge ekler */
+    text-align: center;                        /* Kart içindeki tüm metinleri ortalar */
+    border-top: 5px solid var(--buton-rengi);  /* Kartın sadece üst tarafına bir şerit çeker */
 }
 
-/* Kart İçindeki Tahmin Rakamları */
+/* Kartın İçinde Gösterilen Tahmin Rakamları */
 .metric-card [data-testid="stMetricValue"] {
-    color: var(--kart-metin-rengi) !important;
+    color: var(--kart-metin-rengi) !important;   /* Sayısal sonucun rengi */
 }
 
 /* Buton Düzenlemesi */
 .stButton>button {
-    width: 100%;
-    background-color: var(--buton-rengi) !important;
-    color: var(--buton-yazi-rengi) !important;
-    font-weight: bold;
-    border-radius: 5px;
-    border: none;
-    transition: 0.3s;
+    width: 100%;                                      /* Butonun bulunduğu sütunu tamamen kaplamasını sağlar */
+    background-color: var(--buton-rengi) !important;  /* Arka plan rengi */
+    color: var(--buton-yazi-rengi) !important;        /* Üzerindeki yazı rengi */
+    font-weight: bold;                                /* Yazıyı kalınlaştırır. */
+    border-radius: 5px;                               /* Kartın köşelerini yumuşatır. */
+    border: none;                                     /* Butonun etrafındaki varsayılan ince çizgiyi kaldırır. */
+    transition: 0.3s;                                 /* Animasyonların 0.3 saniyede gerçekleşmesini sağlar. */
 }
 
+/* "Hesapla" Butonunun Üzerine Gelindiğinde Oluşacak Animasyonlar */
 .stButton>button:hover {
-    opacity: 0.8;
-    transform: translateY(-2px);
+    opacity: 0.8;                   /* Butonun rengini saydamlaştırarak parlatır. */
+    transform: translateY(-2px);    /* Butonu biraz yukarı kaldırır. */
 }
 
-
+/* Bilgi kutularındaki, ara başlıklardaki H4 etiketlerinin tasarımı */
 h4 {
-    color: #ffffff;
-    text-align: center;
-    font-family: 'Helvetica Neue', sans-serif;
-    border-bottom: 3px solid var(--buton-rengi);
-    padding-bottom: 10px;
-    font-size: 24px !important;
+    color: #ffffff;                            /* Yazı rengi */
+    text-align: center;                          /* Metni ortalar. */
+    font-family: 'Helvetica Neue', sans-serif;   /* Yazı tipi */
+    border-bottom: 3px solid var(--buton-rengi); /* Altına çizgi ekler. */
+    padding-bottom: 10px;                        /* Çizgi ile yazı arasında 10 piksellik boşluk bırakır. */
+    font-size: 24px !important;                  /* Yazı boyutu */
 }
 
+/* Sayfalardaki maddeli listelerin tasarımı */
 li {
-    color: #030000;
-    font-family: 'Helvetica Neue', sans-serif;
-    padding-bottom: 10px;
-    
+    color: #030000;                            /* Liste yazılarının rengi */
+    font-family: 'Helvetica Neue', sans-serif;   /* Yazı tipi */
+    padding-bottom: 10px;                        /* Her bir liste maddesi arasına boşluk bırakır. */
 }
 
 /* Sayı Giriş Kutularının Dış Çerçevesi ve Arka Planı */
 div[data-testid="stNumberInput"] {
-    background-color: white; 
-    border-radius: 8px;
-    padding: 5px;
-    transition: all 0.3s ease;
+    background-color: white;     /* Arka plan rengi */
+    border-radius: 8px;            /* Köşeleri yumuşatır. */
+    padding: 5px;                  /* 5 piksellik bir boşluk bırakır. */
+    transition: all 0.3s ease;     /* Durum değişikliklerindeki geçişleri yumuşatır. */
 }
 
-/* Kutunun içindeki sayı ve giriş alanı */
+/* Sayının Yazıldığı İç Kutu */
 div[data-testid="stNumberInput"] input {
-    background-color:#3985b842; /* Kutu içi arka plan */
-    font-weight: bold !important;
+    background-color: #3985b842;       /* Arka plan rengi */
+    font-weight: bold !important;        /* Yazıyı kalınlaştırır.*/
 }
