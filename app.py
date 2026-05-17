@@ -142,7 +142,7 @@ if sayfa == "🏠 Ana Sayfa / Hesaplama":
             # Buradaki değerleri model_train.py çıktınıza göre güncelleyebilirsiniz.
             fig.add_annotation(
                 xref="paper", yref="paper", x=0.02, y=0.98,
-                text=f"<b>Model Performansı:</b><br>R² Skoru: %89<br>MAE: 1.24 Gy",
+                text=f"<b>Model Performansı:</b><br>R² Skoru: 0.3382<br>MAE: 4.14 cGy",
                 showarrow=False, bgcolor="#334155", bordercolor="black", borderwidth=1, borderpad=4
             )
 
